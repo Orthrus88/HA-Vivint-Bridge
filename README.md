@@ -22,6 +22,18 @@ proceed without pretending that an unverified endpoint or control path is safe.
 - No credentials, serial numbers, access keys, or private panel data belong in
   this repository.
 
+## Authorized account bootstrap finding
+
+The authorized Vivint account bootstrap was exercised successfully. The hosted
+`panel-login` response returned credential material, but primary-source protocol
+research identifies it as RTSP digest/nonce credentials for panel media access,
+not credentials for the panel's HTTPS admin service on port 8443.
+
+[`scripts/bootstrap_media_credentials.py`](scripts/bootstrap_media_credentials.py)
+exports that media-only material to a new mode-0600 file while printing only its
+structure. Its output belongs in a deployment secret store outside Git. Do not
+mount it into this bridge or send it to port 8443.
+
 The full research boundary and next milestone are in
 [`docs/protocol-status.md`](docs/protocol-status.md).
 

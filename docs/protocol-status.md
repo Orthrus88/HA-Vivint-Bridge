@@ -37,23 +37,31 @@ TLS on port 8443, presents a self-signed certificate with subject
 The SSH service was not accessed. Device-specific addresses, serial numbers,
 and certificate fingerprints are intentionally excluded from this repository.
 
-The maintained `vivintpy` client also documents an authenticated hosted
-`panel-login/{panel_id}` endpoint that returns panel-local credentials. That is
-evidence for an authorized bootstrap path, but it has not yet been exercised in
-this project.
+The authorized Vivint account path is now working through Home Assistant, and
+the maintained `vivintpy` client's hosted `panel-login/{panel_id}` endpoint was
+exercised once. It returned one credential set, which was stored outside Git in
+a mode-0600 deployment secret without printing its values.
+
+Those credentials do not authenticate the `_vivint-admin._tcp` HTTPS service on
+port 8443. Primary-source reverse-engineering notes identify the response as an
+RTSP digest/nonce credential for the panel's media server on port 8554. It is
+therefore classified and stored as media-only material and is not mounted into
+the bridge.
 
 ## Exact blocker
 
 The missing component is the authenticated route and schema map for the
 VS-SH2000's LAN service registry, event subscription, device mapping, and safe
-command protocol. The transport and authentication boundary are now verified;
-inventory and event routes still must be observed using authorized credentials
-before any control endpoint is considered.
+command protocol. The HTTPS transport and authentication boundary are verified,
+but the authorized port-8443 handshake remains unknown. The hosted account's
+media credential does not resolve that blocker. Inventory and event routes still
+must be observed through a verified authorized handshake before any control
+endpoint is considered.
 
 ## Safe next milestone
 
-1. Obtain panel-local credentials through the authorized account bootstrap and
-   store them only in the deployment secret store.
+1. Identify the authorized authentication handshake for the panel's HTTPS admin
+   service without reusing the media credential or guessing write calls.
 2. Identify the read-only inventory and event routes without sending control
    calls.
 3. Record redacted response fixtures and implement schema validation.
@@ -67,6 +75,7 @@ before any control endpoint is considered.
 - Home Assistant community thread: https://community.home-assistant.io/t/vivint-integration/110667/3
 - `ha-vivint`: https://github.com/natekspencer/ha-vivint
 - `vivintpy`: https://github.com/natekspencer/vivintpy
+- `vivint.py` panel-login RTSP credential notes: https://github.com/Riebart/vivint.py/issues/8
 - Homebridge Vivint: https://github.com/balansse/homebridge-vivint
 - VivintOne Home Assistant adapter: https://github.com/mikezio/vivintone-home-assistant
 - VivintOne local sensor transport notes: https://github.com/mikezio/vivintone-home-assistant/blob/main/docs/local-sensor-events.md
