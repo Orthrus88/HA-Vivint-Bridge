@@ -1,0 +1,27 @@
+services:
+  vivint-bridge:
+    container_name: vivint-local-bridge
+    build:
+      context: .
+    environment:
+      TZ: America/Chicago
+      LISTEN_PORT: "8099"
+      VIVINT_PANEL_HOST: ""
+      VIVINT_MODE: scaffold
+    ports:
+      - "8099:8099"
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8099/healthz', timeout=2).read()"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
