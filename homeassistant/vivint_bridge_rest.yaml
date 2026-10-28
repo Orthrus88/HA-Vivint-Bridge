@@ -1,0 +1,34 @@
+# Include this file from configuration.yaml with:
+#
+#   rest: !include vivint_bridge_rest.yaml
+#
+# Home Assistant uses host networking in the reference deployment, so the
+# bridge's published port is available on loopback.
+- resource: http://127.0.0.1:8099/status
+  scan_interval: 30
+  timeout: 5
+  sensor:
+    - name: Vivint Bridge State
+      unique_id: vivint_bridge_state
+      value_template: "{{ value_json.bridge_state }}"
+      icon: mdi:shield-home
+      json_attributes:
+        - version
+        - mode
+        - commands_enabled
+        - blocker
+    - name: Vivint Panel HTTP Status
+      unique_id: vivint_panel_http_status
+      value_template: "{{ value_json.transport.http_status }}"
+      icon: mdi:web-check
+  binary_sensor:
+    - name: Vivint Panel Reachable
+      unique_id: vivint_panel_reachable
+      value_template: "{{ value_json.transport.reachable }}"
+      device_class: connectivity
+    - name: Vivint Panel TLS Pin Valid
+      unique_id: vivint_panel_tls_pin_valid
+      value_template: >-
+        {{ value_json.transport.tls and
+           value_json.transport.certificate_matches_pin }}
+      device_class: connectivity

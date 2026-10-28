@@ -43,6 +43,21 @@ VIVINT_PANEL_CERT_SHA256=REPLACE_WITH_OBSERVED_SHA256_FINGERPRINT
 VIVINT_MODE=research
 ```
 
+## Home Assistant status entities
+
+The optional [`homeassistant/vivint_bridge_rest.yaml`](homeassistant/vivint_bridge_rest.yaml)
+file creates local Home Assistant entities for bridge state, panel reachability,
+the panel's HTTP authentication boundary, and TLS pin validation. It deliberately
+does not publish the panel address, certificate fingerprint, or device identifiers
+as entity attributes.
+
+Add this line to Home Assistant's `configuration.yaml`, place the included YAML
+file beside it, validate the configuration, and restart Home Assistant:
+
+```yaml
+rest: !include vivint_bridge_rest.yaml
+```
+
 ## Safety boundary
 
 Development must remain read-only until the exact VS-SH2000 local transport and
