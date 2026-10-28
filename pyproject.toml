@@ -6,6 +6,8 @@ build-backend = "setuptools.build_meta"
 name = "ha-vivint-bridge"
 version = "0.2.0"
 description = "Local-first bridge research scaffold for authorized Vivint panels and Home Assistant"
+readme = "README.md"
+license = "MIT"
 requires-python = ">=3.11"
 
 [tool.setuptools.packages.find]
