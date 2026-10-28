@@ -6,8 +6,10 @@ services:
     environment:
       TZ: America/Chicago
       LISTEN_PORT: "8099"
-      VIVINT_PANEL_HOST: ""
-      VIVINT_MODE: scaffold
+      VIVINT_PANEL_HOST: "${VIVINT_PANEL_HOST:-}"
+      VIVINT_PANEL_PORT: "${VIVINT_PANEL_PORT:-8443}"
+      VIVINT_PANEL_CERT_SHA256: "${VIVINT_PANEL_CERT_SHA256:-}"
+      VIVINT_MODE: "${VIVINT_MODE:-research}"
     ports:
       - "8099:8099"
     restart: unless-stopped
